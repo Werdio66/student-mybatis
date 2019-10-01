@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com._520.student.mybatis.mapper.StudentMapper">
+    <!-- 处理表中列名与属性名不同问题 -->
+    <resultMap id="studentResultMap" type="Student">
+        <!--
+            -id用来处理主键，提升性能，其他和result一样
+            -property:类中属性值
+            -column：表中列名
+        -->
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+    </resultMap>
+    <select id="listAll" resultMap="studentResultMap">
+            SELECT * FROM t_student
+    </select>
+    <select id="get" resultType="Student">
+        SELECT * FROM t_student WHERE id = #{id}
+    </select>
+    <delete id="delete">
+        DELETE FROM t_student WHERE id = #{id}
+    </delete>
+    <insert id="save">
+        INSERT INTO t_student (name,age,math,computer,english)
+        VALUES (#{name},#{age},#{math},#{computer},#{english})
+    </insert>
+    <update id="update">
+        UPDATE t_student SET name=#{name},age=#{age},math=#{math},
+        computer=#{computer},english=#{english}
+        WHERE id=#{id}
+    </update>
+    <select id="advanceQuery" resultMap="studentResultMap">
+        SELECT id,name,age,math,computer,english FROM t_student
+        <where>
+            <if test="studentName!=null">AND name=%studentName%</if>
+            <if test="minAge!=null">AND age>minAge</if>
+            <if test="maxAge!=null">AND age&lt;maxAge</if>
+        </where>
+    </select>
+</mapper>
